@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الزكاة</title>
+    <style>
+        /* إعدادات عامة */
+        body {
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: center;
+            background-image: url('https://i.ibb.co/Smj7rb4/Leonardo-Phoenix-A-vibrant-and-intricately-designed-digital-il-2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* تنسيق الحاوية */
+        .container {
+            width: 450px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.85); /* خلفية شبه شفافة */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* تنسيق العنوان */
+        h1 {
+            color: #4CAF50;
+            font-size: 30px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* تنسيق النصوص داخل الـ label */
+        label {
+            font-size: 18px;
+            color: #333;
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* تنسيق المدخلات */
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
+            font-size: 16px;
+            color: #333;
+            transition: background-color 0.3s ease, border 0.3s ease;
+        }
+
+        /* تأثير التركيز على المدخلات */
+        input:focus, select:focus {
+            border-color: #4CAF50;
+            background-color: #e9f5e0;
+            outline: none;
+        }
+
+        /* تنسيق الزر */
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* تغيير اللون والتأثير عند التمرير فوق الزر */
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* تنسيق النتيجة */
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        /* تأثير عند تغيير النتيجة */
+        #result.success {
+            background-color: #e9f5e0;
+            color: #4CAF50;
+        }
+
+        #result.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>حاسبة الزكاة</h1>
+
+        <!-- خانة تحديد العملة -->
+        <label for="currency">حدد العملة:</label>
+        <select id="currency">
+            <option value="SAR">ريال سعودي</option>
+            <option value="EGP">جنيه مصري</option>
+            <option value="AED">درهم إماراتي</option>
+            <option value="KWD">دينار كويتي</option>
+            <option value="QAR">ريال قطري</option>
+            <option value="OMR">ريال عماني</option>
+            <option value="BHD">دينار بحريني</option>
+            <option value="JOD">دينار أردني</option>
+            <option value="MAD">درهم مغربي</option>
+        </select>
+
+        <!-- خانة إدخال ثمن الغرام من الذهب -->
+        <label for="goldPrice">ثمن الغرام الواحد من الذهب (بالعملة المحددة):</label>
+        <input type="number" id="goldPrice" placeholder="أدخل قيمة الغرام من الذهب">
+
+        <!-- خانة إدخال المبلغ الإجمالي -->
+        <label for="moneyAmount">المبلغ الإجمالي (بالعملة المحددة):</label>
+        <input type="number" id="moneyAmount" placeholder="أدخل المبلغ الإجمالي" oninput="checkNisab()">
+
+        <!-- زر الحساب -->
+        <button onclick="calculateZakat()">احسب الزكاة</button>
+
+        <!-- عرض النتيجة -->
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkNisab() {
+            let goldPrice = document.getElementById("goldPrice").value;
+            let moneyAmount = document.getElementById("moneyAmount").value;
+
+            if (goldPrice === "" || moneyAmount === "") {
+                document.getElementById("result").innerText = "";
+                return;
+            }
+
+            const goldNisab = 85;
+            let moneyNisab = goldPrice * goldNisab;
+
+            if (moneyAmount >= moneyNisab) {
+                document.getElementById("result").innerText = `المال بلغ النصاب: النصاب هو ${moneyNisab.toFixed(2)} ${document.getElementById("currency").value}`;
+            } else {
+                document.getElementById("result").innerText = `المال لا يبلغ النصاب: النصاب هو ${moneyNisab.toFixed(2)} ${document.getElementById("currency").value}`;
+            }
+        }
+
+        function calculateZakat() {
+            let goldPrice = document.getElementById("goldPrice").value;
+            let moneyAmount = document.getElementById("moneyAmount").value;
+            let currency = document.getElementById("currency").value;
+
+            if (goldPrice === "" || moneyAmount === "") {
+                alert("يرجى إدخال جميع البيانات بشكل صحيح.");
+                return;
+            }
+
+            const goldNisab = 85;
+            let moneyNisab = goldPrice * goldNisab;
+
+            if (moneyAmount < moneyNisab) {
+                document.getElementById("result").innerText = `المبلغ لا يحقق النصاب. النصاب هو: ${moneyNisab.toFixed(2)} ${currency}`;
+                return;
+            }
+
+            let zakat = moneyAmount * 0.025;
+            document.getElementById("result").innerText = `الزكاة المستحقة هي: ${zakat.toFixed(2)} ${currency}`;
+        }
+    </script>
+</body>
+</html>
